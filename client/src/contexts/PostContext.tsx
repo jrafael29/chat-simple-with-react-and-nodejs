@@ -40,13 +40,6 @@ export const  PostProvider = ({children}: {children: ReactNode}) => {
         id
       }
     })
-    // const newPosts = posts.map(post => {
-    //   if(post.id === id) {
-    //     post.likes = post.likes + 1
-    //   }
-    //   return post
-    // })
-    // setPosts(newPosts);
   }
 
   function removePost({id}: IdPostType){
