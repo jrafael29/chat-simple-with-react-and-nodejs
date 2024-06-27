@@ -1,20 +1,19 @@
+import { useContext } from "react"
 import { rooms } from "../rooms"
 import { socket } from "../socket"
 import { Room } from "../types/Room"
+import { AppContext } from "../contexts/AppContext"
 
-type RoomsProps = {
-  selectedRoom: string,
-  setSelectedRoom: (r: string) => void
-}
-export default function Rooms({selectedRoom, setSelectedRoom}: RoomsProps) {
 
+export default function Rooms() {
+  const appCtx = useContext(AppContext);
   const joinRoom = (room: string) => {
     socket.emit("join-room", room);
-    setSelectedRoom(room)
+    appCtx?.setSelectedRoom(room)
   }
   const leaveRoom = (room: string) => {
     socket.emit("left-room", room);
-    setSelectedRoom("")
+    appCtx?.setSelectedRoom("")
   }
 
   return (
@@ -23,19 +22,19 @@ export default function Rooms({selectedRoom, setSelectedRoom}: RoomsProps) {
         {rooms.map((room: Room) => (
           <div key={room.id}>
             {
-              room.id === selectedRoom && (
+              room.id === appCtx?.selectedRoom && (
                 <>
                   <div className="card" >
                     <div className="card-body">
                       <h5 className="card-title">[Entrou] {room.name}</h5>
-                      <button className="btn btn-warning" onClick={e => leaveRoom(room.id)}>Sair da Sala {selectedRoom}</button>
+                      <button className="btn btn-warning" onClick={e => leaveRoom(room.id)}>Sair da Sala {appCtx?.selectedRoom}</button>
                     </div>
                   </div>
                 </>
               )
             }
             {
-              room.id !== selectedRoom && (
+              room.id !== appCtx?.selectedRoom && (
                 <>
                   <div className="card" >
                     <div className="card-body">

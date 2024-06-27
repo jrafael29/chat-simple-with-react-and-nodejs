@@ -1,26 +1,26 @@
+import { useContext } from 'react';
 import { socket } from '../socket';
+import { AppContext } from '../contexts/AppContext';
 
-type ConnectionManagerProps = {
-  isConnected: boolean
-  setIsConnected: (c: boolean) => void
-}
-export function ConnectionManager({isConnected, setIsConnected}: ConnectionManagerProps) {
+export function ConnectionManager() {
+
+  const appCtx = useContext(AppContext);
 
   function toggle(){
-    if(isConnected){
+    if(appCtx?.isConnected){
       socket.disconnect();
     }else{
       socket.connect();
     }
-    setIsConnected(!isConnected)
-  }
+    console.log("opa", appCtx)
 
+  }
 
   return (
     <>
       <div className=''>
-      <button onClick={toggle} type="button" className={ (!isConnected ? "btn-outline-success " : "btn-outline-warning ") + " btn position-relative text-black"}>
-        {isConnected ? "Desconectar" : "Conectar"}
+      <button onClick={toggle} type="button" className={ (!appCtx?.isConnected ? "btn-outline-success " : "btn-outline-warning ") + " btn position-relative text-black"}>
+        {appCtx?.isConnected ? "Desconectar" : "Conectar"}
       </button>
       </div>
     </>

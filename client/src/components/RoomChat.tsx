@@ -1,19 +1,19 @@
-import { useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { socket } from "../socket"
+import { AppContext } from "../contexts/AppContext"
 
 type Message = {id: string, message: string, from: string}
-type RoomChatProps = {
-  room: string
-  selfId: string,
-}
-export default function RoomChat({room, selfId}: RoomChatProps){
+
+export default function RoomChat(){
+
+  const appCtx = useContext(AppContext)
 
   const [messages, setMessages] = useState<Message[]>([])
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
     setMessages([]);
-  }, [room])
+  }, [appCtx?.selectedRoom])
 
   useEffect(() => {
     socket.on("room-messages", (messages: Message[]) => {
@@ -58,19 +58,19 @@ export default function RoomChat({room, selfId}: RoomChatProps){
   return (
     <>
       {
-        room !== "" && (
+        appCtx?.selectedRoom !== "" && (
           <div className="w-100">
             <div>
-              <h3>Chat da sala {room}</h3>
+              <h3>Chat da sala {appCtx?.selectedRoom}</h3>
             </div>
             <div style={{maxHeight: "250px", overflowY: "scroll"}} className="bg-dark text-white border p-5 d-flex flex-column">
             {messages.map(message => (
               <div key={message.id}>
                 {
-                  message.from === selfId && (messageFromMe(message))
+                  message.from === appCtx?.id && (messageFromMe(message))
                 }
                 {
-                  message.from !== selfId && (messageFromOther(message))
+                  message.from !== appCtx?.id && (messageFromOther(message))
                 }
               </div>
             ))}
